@@ -1,0 +1,27 @@
+{
+  "name": "youtubeclonebackend",
+  "version": "0.0.1",
+  "description": "My take on YouTube",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node index.js",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vachanmn123/YouTubeCloneBackend.git"
+  },
+  "keywords": [
+    "YouTube",
+    "Clone"
+  ],
+  "author": "Vachan MN",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vachanmn123/YouTubeCloneBackend/issues"
+  },
+  "homepage": "https://github.com/vachanmn123/YouTubeCloneBackend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
