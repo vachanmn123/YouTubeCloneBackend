@@ -4,8 +4,8 @@
   "description": "My take on YouTube",
   "main": "index.js",
   "scripts": {
-    "dev": "node index.js",
-    "start": "node index.js"
+    "dev": "nodemon index.js",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/vachanmn123/YouTubeCloneBackend#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "nodemon": "^3.0.3"
   }
 }
