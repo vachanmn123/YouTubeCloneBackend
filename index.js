@@ -1,6 +1,5 @@
 const express = require("express");
 const connectMongo = require("./lib/mongo");
-const loadModels = require("./models");
 
 // Create an Express application
 const app = express();
@@ -8,10 +7,7 @@ const port = process.env.PORT || 3000;
 
 // Connect to MongoDB on startup
 // This initializes mongoose and connects to the MongoDB database
-connectMongo().then(() => {
-  // Load the models
-  loadModels();
-});
+connectMongo();
 
 // Middleware to parse the request body as JSON and URL encoded data
 app.use(express.json());
