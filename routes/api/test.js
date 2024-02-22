@@ -1,6 +1,7 @@
 const router = require("express").Router();
+const verifyToken = require("../../middleware/auth");
 
-router.get("/", (req, res) => {
+router.get("/", verifyToken, (req, res) => {
   res.json({ message: "API Test Index" });
 });
 

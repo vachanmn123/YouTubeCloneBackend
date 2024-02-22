@@ -1,5 +1,9 @@
 const express = require("express");
 const connectMongo = require("./lib/mongo");
+const env = require("dotenv");
+
+// Load environment variables from a .env file into process.env
+env.config();
 
 // Create an Express application
 const app = express();
