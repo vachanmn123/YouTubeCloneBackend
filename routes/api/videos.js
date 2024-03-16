@@ -26,7 +26,7 @@ const upload = multer({
         null,
         `videos/${req.userId}/${Date.now().toString()}/video.${file.originalname
           .split(".")
-          .pop()}`,
+          .pop()}`
       );
     },
     metadata: function (req, file, cb) {
@@ -144,10 +144,11 @@ router.post("/:id/like", verifyToken, async (req, res) => {
   }
   if (video.dislikes.map((objId) => objId.toString()).includes(req.userId)) {
     video.dislikes = video.dislikes.filter(
-      (like) => like.toString() !== req.userId,
+      (like) => like.toString() !== req.userId
     );
   }
   video.likes.push(req.userId);
+  video.likeCount += 1;
   try {
     const updatedVideo = await video.save();
     res.json({ message: "Video liked" });
@@ -166,6 +167,7 @@ router.post("/:id/unlike", verifyToken, async (req, res) => {
     return res.status(400).json({ message: "You have not liked this video." });
   }
   video.likes = video.likes.filter((like) => like.toString() !== req.userId);
+  video.likeCount -= 1;
   try {
     const updatedVideo = await video.save();
     res.json({ message: "Video unliked" });
@@ -187,6 +189,7 @@ router.post("/:id/dislike", verifyToken, async (req, res) => {
     video.likes = video.likes.filter((like) => like.toString() !== req.userId);
   }
   video.dislikes.push(req.userId);
+  video.dislikeCount += 1;
   try {
     const updatedVideo = await video.save();
     res.json({ message: "Video disliked" });
@@ -206,8 +209,9 @@ router.post("/:id/undislike", verifyToken, async (req, res) => {
     return res.status(400).json({ message: "You have not liked this video." });
   }
   video.dislikes = video.dislikes.filter(
-    (like) => like.toString() !== req.userId,
+    (like) => like.toString() !== req.userId
   );
+  video.dislikeCount -= 1;
   try {
     const updatedVideo = await video.save();
     res.json({ message: "Video undisliked" });
