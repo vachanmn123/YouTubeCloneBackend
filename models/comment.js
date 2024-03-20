@@ -13,11 +13,7 @@ const commentSchema = new mongoose.Schema({
     ref: "User",
     default: [],
   },
-  dislikes: {
-    type: Array(mongoose.Schema.Types.ObjectId),
-    ref: "User",
-    default: [],
-  },
+  likeCount: { type: Number, default: 0 },
   replies: {
     type: Array(mongoose.Schema.Types.ObjectId),
     ref: "Comment",

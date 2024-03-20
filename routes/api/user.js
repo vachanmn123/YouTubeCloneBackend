@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const verifyToken = require("../../middleware/auth");
 const UserSchema = require("../../models/user");
+const VideoSchema = require("../../models/video");
 
 // Get all users
 router.get("/", async (req, res) => {
@@ -12,7 +13,7 @@ router.get("/", async (req, res) => {
   const users = await UserSchema.find();
   const retUsers = users.map((user) => {
     return {
-      _id: user._id,
+      _id: user._id.toString(),
       userName: user.userName,
       subsriberCount: user.subscriberCount,
       firstName: user.firstName,
@@ -38,19 +39,23 @@ router.get("/", async (req, res) => {
 
 // Get user by id
 router.get("/:id", async (req, res) => {
-  const user = await UserSchema.findById(req.params.id);
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
+  try {
+    const user = await UserSchema.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const retUser = {
+      _id: user._id.toString(),
+      userName: user.userName,
+      subscriberCount: user.subscriberCount,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageURL: user.imageURL,
+    };
+    res.json(retUser);
+  } catch (err) {
+    return res.status(400).json({ message: err });
   }
-  const retUser = {
-    _id: user._id,
-    userName: user.userName,
-    subsriberCount: user.subscriberCount,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    imageURL: user.imageURL,
-  };
-  res.json(retUser);
 });
 
 router.post("/:id/subscribe", verifyToken, async (req, res) => {
@@ -93,6 +98,15 @@ router.post("/:id/unsubscribe", verifyToken, async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err });
   }
+});
+
+router.get("/:id/videos", async (req, res) => {
+  const user = await UserSchema.findById(req.params.id);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
+  const videos = await VideoSchema.find({ uploader: req.params.id });
+  res.json(videos);
 });
 
 module.exports = router;
