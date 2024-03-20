@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // User login
-router.post("/", async (req, res) => {
+router.post("/", async (req, res, next) => {
   try {
     const { username, password } = req.body;
     const user = await User.findOne({ userName: username });
@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
     });
     res.status(200).json({ token });
   } catch (error) {
-    res.status(500).json({ error: "Login failed" });
+    next(error);
   }
 });
 

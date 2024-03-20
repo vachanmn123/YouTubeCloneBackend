@@ -26,14 +26,26 @@ app.use("/", routes);
 
 // Error handler
 app.use((err, req, res, next) => {
-  if (err.name === "ValidationError") {
-    return res.status(400).json({ error: err.message });
+  switch (err.name) {
+    case "ValidationError":
+      res.status(400).json({ message: err.message });
+      break;
+    case "CastError":
+      res.status(404).json({ message: "Resource not found" });
+      break;
+    case "MongoServerError":
+      if (err.code === 11000) {
+        res.status(400).json({ message: "Resource already exists" });
+        return;
+      } else {
+        res.status(500).json({ message: "Something went wrong!" });
+      }
+      break;
+    default:
+      console.log(err.name);
+      res.status(500).json({ message: "Something went wrong!" });
+      break;
   }
-  if (err.name === "CastError") {
-    return res.status(400).json({ error: "malformatted id" });
-  }
-  console.error(err);
-  return res.status(500).json({ error: "An error occured" });
 });
 
 // Start the server
