@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
     return {
       _id: user._id.toString(),
       userName: user.userName,
-      subsriberCount: user.subscriberCount,
+      subscriberCount: user.subscriberCount,
       firstName: user.firstName,
       lastName: user.lastName,
       imageURL: user.imageURL,
