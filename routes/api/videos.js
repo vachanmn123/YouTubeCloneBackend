@@ -170,7 +170,8 @@ router.post("/:id/like", verifyToken, async (req, res, next) => {
       );
     }
     video.likes.push(req.userId);
-    video.likeCount += 1;
+    video.likeCount = video.likes.length;
+    video.dislikeCount = video.dislikes.length;
     try {
       const updatedVideo = await video.save();
       res.json({ message: "Video liked" });
@@ -195,7 +196,7 @@ router.post("/:id/unlike", verifyToken, async (req, res, next) => {
         .json({ message: "You have not liked this video." });
     }
     video.likes = video.likes.filter((like) => like.toString() !== req.userId);
-    video.likeCount -= 1;
+    video.likeCount = video.likes.length;
     try {
       const updatedVideo = await video.save();
       res.json({ message: "Video unliked" });
@@ -225,7 +226,8 @@ router.post("/:id/dislike", verifyToken, async (req, res, next) => {
       );
     }
     video.dislikes.push(req.userId);
-    video.dislikeCount += 1;
+    video.dislikeCount = video.dislikes.length;
+    video.likeCount = video.likes.length;
     try {
       const updatedVideo = await video.save();
       res.json({ message: "Video disliked" });
@@ -253,7 +255,7 @@ router.post("/:id/undislike", verifyToken, async (req, res, next) => {
     video.dislikes = video.dislikes.filter(
       (like) => like.toString() !== req.userId
     );
-    video.dislikeCount -= 1;
+    video.dislikeCount = video.dislikes.length;
     try {
       const updatedVideo = await video.save();
       res.json({ message: "Video undisliked" });
