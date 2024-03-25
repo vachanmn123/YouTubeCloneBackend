@@ -2,6 +2,7 @@ const router = require("express").Router();
 const User = require("../../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const verifyToken = require("../../middleware/auth");
 
 // User login
 router.post("/", async (req, res, next) => {
@@ -19,6 +20,28 @@ router.post("/", async (req, res, next) => {
       expiresIn: "6h",
     });
     res.status(200).json({ token });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/", verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const resp = {
+      _id: user._id,
+      userName: user.userName,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      imageURL: user.imageURL,
+      subscriberCount: user.subscriberCount,
+      isAdmin: user.isAdmin,
+    };
+    res.status(200).json(resp);
   } catch (error) {
     next(error);
   }
