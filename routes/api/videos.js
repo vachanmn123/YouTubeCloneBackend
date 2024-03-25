@@ -265,4 +265,34 @@ router.post("/:id/undislike", verifyToken, async (req, res, next) => {
   }
 });
 
+router.get("/:id/userLiked", verifyToken, async (req, res, next) => {
+  try {
+    const video = await videoSchema.findById(req.params.id);
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+    const userLiked = video.likes
+      .map((objId) => objId.toString())
+      .includes(req.userId);
+    res.json({ userLiked });
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.get("/:id/userDisliked", verifyToken, async (req, res, next) => {
+  try {
+    const video = await videoSchema.findById(req.params.id);
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+    const userDisliked = video.dislikes
+      .map((objId) => objId.toString())
+      .includes(req.userId);
+    res.json({ userDisliked });
+  } catch (e) {
+    next(e);
+  }
+});
+
 module.exports = router;
