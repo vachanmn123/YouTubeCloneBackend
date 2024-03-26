@@ -104,6 +104,24 @@ router.post("/:id/unsubscribe", verifyToken, async (req, res, next) => {
   }
 });
 
+router.get("/:id/isSubscribed", verifyToken, async (req, res, next) => {
+  try {
+    const user = await UserSchema.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (
+      user.subscribers.map((objId) => objId.toString()).includes(req.userId)
+    ) {
+      res.json({ isSubscribed: true });
+    } else {
+      res.json({ isSubscribed: false });
+    }
+  } catch (e) {
+    next(e);
+  }
+});
+
 router.get("/:id/videos", async (req, res, next) => {
   try {
     const user = await UserSchema.findById(req.params.id);
