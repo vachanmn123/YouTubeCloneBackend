@@ -94,15 +94,16 @@ router.post("/:commentId/like", verifyToken, async (req, res, next) => {
         .json({ message: "You already liked this comment" });
     }
 
-    if (
-      comment.dislikes.map((objId) => objId.toString()).includes(req.userId)
-    ) {
-      comment.dislikes = comment.dislikes.filter(
-        (dislike) => dislike.toString() != req.userId
-      );
-    }
+    // if (
+    //   comment.dislikes.map((objId) => objId.toString()).includes(req.userId)
+    // ) {
+    //   comment.dislikes = comment.dislikes.filter(
+    //     (dislike) => dislike.toString() != req.userId
+    //   );
+    // }
 
     comment.likes.push(req.userId);
+    comment.likeCount = comment.likes.length;
     await comment.save();
     res.json({ message: "Comment liked" });
   } catch (e) {
@@ -127,6 +128,7 @@ router.post("/:commentId/unlike", verifyToken, async (req, res, next) => {
     comment.likes = comment.likes.filter(
       (like) => like.toString() != req.userId
     );
+    comment.likeCount = comment.likes.length;
     await comment.save();
     res.json({ message: "Comment unliked" });
   } catch (e) {
@@ -135,64 +137,64 @@ router.post("/:commentId/unlike", verifyToken, async (req, res, next) => {
 });
 
 // Dislike a comment
-router.post("/:commentId/dislike", verifyToken, async (req, res, next) => {
-  try {
-    const comment = await commentSchema.findById(req.params.commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
-    }
+// router.post("/:commentId/dislike", verifyToken, async (req, res, next) => {
+//   try {
+//     const comment = await commentSchema.findById(req.params.commentId);
+//     if (!comment) {
+//       return res.status(404).json({ message: "Comment not found" });
+//     }
 
-    if (
-      comment.dislikes.map((objId) => objId.toString()).includes(req.userId)
-    ) {
-      return res
-        .status(400)
-        .json({ message: "You already disliked this comment" });
-    }
+//     if (
+//       comment.dislikes.map((objId) => objId.toString()).includes(req.userId)
+//     ) {
+//       return res
+//         .status(400)
+//         .json({ message: "You already disliked this comment" });
+//     }
 
-    if (comment.likes.map((objId) => objId.toString()).includes(req.userId)) {
-      comment.likes = comment.likes.filter(
-        (like) => like.toString() != req.userId
-      );
-    }
+//     if (comment.likes.map((objId) => objId.toString()).includes(req.userId)) {
+//       comment.likes = comment.likes.filter(
+//         (like) => like.toString() != req.userId
+//       );
+//     }
 
-    comment.dislikes.push(req.userId);
-    try {
-      await comment.save();
-      res.json({ message: "Comment disliked" });
-    } catch (e) {
-      res.status(400).json({ message: e });
-    }
-  } catch (e) {
-    next(e);
-  }
-});
+//     comment.dislikes.push(req.userId);
+//     try {
+//       await comment.save();
+//       res.json({ message: "Comment disliked" });
+//     } catch (e) {
+//       res.status(400).json({ message: e });
+//     }
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 // Undislike a comment (remove dislike)
-router.post("/:commentId/undislike", verifyToken, async (req, res, next) => {
-  try {
-    const comment = await commentSchema.findById(req.params.commentId);
-    if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
-    }
+// router.post("/:commentId/undislike", verifyToken, async (req, res, next) => {
+//   try {
+//     const comment = await commentSchema.findById(req.params.commentId);
+//     if (!comment) {
+//       return res.status(404).json({ message: "Comment not found" });
+//     }
 
-    if (
-      !comment.dislikes.map((objId) => objId.toString()).includes(req.userId)
-    ) {
-      return res
-        .status(400)
-        .json({ message: "You have not disliked this comment." });
-    }
+//     if (
+//       !comment.dislikes.map((objId) => objId.toString()).includes(req.userId)
+//     ) {
+//       return res
+//         .status(400)
+//         .json({ message: "You have not disliked this comment." });
+//     }
 
-    comment.dislikes = comment.dislikes.filter(
-      (dislike) => dislike.toString() != req.userId
-    );
-    await comment.save();
-    res.json({ message: "Comment undisliked" });
-  } catch (e) {
-    next(e);
-  }
-});
+//     comment.dislikes = comment.dislikes.filter(
+//       (dislike) => dislike.toString() != req.userId
+//     );
+//     await comment.save();
+//     res.json({ message: "Comment undisliked" });
+//   } catch (e) {
+//     next(e);
+//   }
+// });
 
 // Delete a comment
 router.delete("/:commentId", verifyToken, async (req, res, next) => {

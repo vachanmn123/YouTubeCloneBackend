@@ -43,6 +43,7 @@ app.use((err, req, res, next) => {
       break;
     default:
       console.log(err.name);
+      console.log(err);
       res.status(500).json({ message: "Something went wrong!" });
       break;
   }
